@@ -1,0 +1,13 @@
+#### GET ALL
+GET http://localhost:3001/api/blogs
+
+#### INSERTAR
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Prueba de insercion de blog",
+    "author": "Guillermo",
+    "url": "www.prueba.net",
+    "likes": "1"
+}
