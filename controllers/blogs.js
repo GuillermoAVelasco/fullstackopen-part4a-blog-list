@@ -23,16 +23,25 @@ blogsRouter.post('/', (request, response,next) => {
 })
 
 const reducer= (sum)=>{ return sum+1}
-const mostBlogs = (blogs) => {
+const mostBlogs  = (blogs) => {
   const xx=_.countBy(_.map(blogs,'author'), reducer)
 
   const values=Object.values(xx)
   const keys=Object.keys(xx)
-  
-  return keys.map((e,i)=> {
-    const cadena=`{"${e.substr(0,e.length-1)}":"${values[i]}"}`
+  const maximo=(max,e)=> max=Math.max(max,e)
+  const max=values.reduce(maximo,0)
+  const index = values.findIndex(e => { 
+    return e === max
+  });
+
+  return JSON.parse(`{"author":"${keys[index].substr(0,keys[0].length-1)}","blogs":${values[index]}}`)
+
+/*
+  return keys.map((e,i)=> {   
+    const cadena=`{"author":"${e.substr(0,e.length-1)}","blogs":${values[i]}}`
     return JSON.parse(cadena)    
 })
+*/
 }
 
 blogsRouter.get('/mostBlogs', (request, response,next) => {
