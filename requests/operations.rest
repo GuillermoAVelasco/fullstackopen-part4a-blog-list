@@ -6,8 +6,11 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Prueba de insercion de blog",
-    "author": "Guillermo",
+    "title": "Prueba de POST",
+    "author": "Mario",
     "url": "www.prueba.net",
-    "likes": "1"
+    "likes": "2"
 }
+
+#### Most Blogs
+GET http://localhost:3001/api/blogs/mostBlogs
