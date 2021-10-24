@@ -54,4 +54,24 @@ blogsRouter.get('/mostBlogs', (request, response,next) => {
 })
 
 
+const mostLikes  = (blogs) => {
+  const xx=_.map(blogs,'likes')
+  const maximo=_.max(xx)
+  return _.filter(_.map(blogs,(e)=>{ 
+    return JSON.parse(`{"author":"${e.author}","likes":"${e.likes}"}`) }), (e)=> { 
+    return (maximo===Number.parseInt(e.likes))? e.author: false 
+  })
+}
+
+
+blogsRouter.get('/mostLikes', (request, response,next) => {
+  Blog
+    .find({})
+    .then(blogs => {      
+      response.json(mostLikes(blogs))
+      })
+    .catch(e=>next(e))
+})
+
+
 module.exports = blogsRouter
