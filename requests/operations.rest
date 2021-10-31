@@ -8,8 +8,7 @@ Content-Type: application/json
 {
     "title": "Prueba de POST",
     "author": "Juancito",
-    "url": "www.prueba.net",
-    "likes": "10"
+    "url": "www.prueba.net"
 }
 
 #### Most Blogs

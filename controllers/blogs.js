@@ -2,24 +2,23 @@ var _ = require('lodash');
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 
-blogsRouter.get('/', (request, response,next) => {
-    Blog
-      .find({})
-      .then(blogs => {
-        response.json(blogs)
-        })
-      .catch(e=>next(e))
+blogsRouter.get('/', async (request, response) => {
+  const blogs=await Blog.find({})
+  response.json(blogs)
 })
-  
-blogsRouter.post('/', (request, response,next) => {
-    const blog = new Blog(request.body)
-  
-    blog
-      .save()
-      .then(result => {
-        response.status(201).json(result)
-        })      
-      .catch(e=>next(e))
+
+blogsRouter.post('/', async (request, response) => {
+  //const blog = new Blog(request.body)
+  const body = request.body
+  const blog = new Blog({
+    title: body.title,
+    author:body.author,
+    url:body.url,
+    likes: body.likes || 0
+  })
+
+  const result = await blog.save()
+  response.status(201).json(result)
 })
 
 const reducer= (sum)=>{ return sum+1}
@@ -36,21 +35,17 @@ const mostBlogs  = (blogs) => {
 
   return JSON.parse(`{"author":"${keys[index].substr(0,keys[0].length-1)}","blogs":${values[index]}}`)
 
-/*
-  return keys.map((e,i)=> {   
-    const cadena=`{"author":"${e.substr(0,e.length-1)}","blogs":${values[i]}}`
-    return JSON.parse(cadena)    
-})
-*/
+  /*
+    return keys.map((e,i)=> {   
+      const cadena=`{"author":"${e.substr(0,e.length-1)}","blogs":${values[i]}}`
+      return JSON.parse(cadena)    
+  })
+  */
 }
 
-blogsRouter.get('/mostBlogs', (request, response,next) => {
-  Blog
-    .find({})
-    .then(blogs => {
-      response.json(mostBlogs(blogs))
-      })
-    .catch(e=>next(e))
+blogsRouter.get('/mostBlogs', async (request, response) => {
+  const blogs = await Blog.find({})
+  response.json(mostBlogs(blogs))
 })
 
 
@@ -63,15 +58,30 @@ const mostLikes  = (blogs) => {
   })
 }
 
-
-blogsRouter.get('/mostLikes', (request, response,next) => {
-  Blog
-    .find({})
-    .then(blogs => {      
-      response.json(mostLikes(blogs))
-      })
-    .catch(e=>next(e))
+blogsRouter.get('/mostLikes', async (request, response) => {
+  const blogs = await Blog.find({})
+  response.json(mostLikes(blogs))
 })
 
+blogsRouter.delete('/:id', async (request, response) => {
+  await Blog.findByIdAndRemove(request.params.id)
+  response.status(204).end()
+})
+
+blogsRouter.put('/:id', async (request, response) => {
+  const body = request.body
+
+  const blog = {
+    likes: body.likes
+  }
+
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+  response.json(updatedBlog)
+})
+
+blogsRouter.delete('/:id', async (request, response) => {
+  await Blog.findByIdAndRemove(request.params.id)
+  response.status(204).end()
+})
 
 module.exports = blogsRouter

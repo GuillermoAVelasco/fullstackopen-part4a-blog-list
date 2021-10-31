@@ -1,5 +1,6 @@
 express = require('express')
 const config = require('./utils/config')
+require('express-async-errors')
 const mongoose = require('mongoose')
 const notesRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
